@@ -85,9 +85,35 @@ grails.hibernate.pass.readonly = false
 // configure passing read-only to OSIV session by default, requires "singleSession = false" OSIV mode
 grails.hibernate.osiv.readonly = false
 
+grails {
+    mongo {
+        host = "localhost"
+        port = 27017
+        //username = "blah"
+        //password = "blah"
+        databaseName = "foo"
+    }
+}
+
+
+
 environments {
     development {
         grails.logging.jul.usebridge = true
+
+        //Mongo config
+        mongodb {
+            host="localhost"
+            port=27017
+            dbName = "whatever"
+        }
+
+        //Path to document file queue.
+        registerviewer.queue.path = "test/resources/pending"
+
+    }
+    test {
+        registerviewer.queue.path = "test/resources/pending"
     }
     production {
         grails.logging.jul.usebridge = false
@@ -103,7 +129,7 @@ log4j.main = {
     //    console name:'stdout', layout:pattern(conversionPattern: '%c{2} %m%n')
     //}
 
-    error  'org.codehaus.groovy.grails.web.servlet',        // controllers
+    info  'org.codehaus.groovy.grails.web.servlet',        // controllers
            'org.codehaus.groovy.grails.web.pages',          // GSP
            'org.codehaus.groovy.grails.web.sitemesh',       // layouts
            'org.codehaus.groovy.grails.web.mapping.filter', // URL mapping
