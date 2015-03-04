@@ -1,5 +1,6 @@
 package com.pod.registerviewer.com.pod.registerviewer
 
+import com.pod.registerviewer.Count
 import grails.test.mixin.TestFor
 import spock.lang.Specification
 

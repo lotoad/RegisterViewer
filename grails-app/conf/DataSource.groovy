@@ -17,6 +17,7 @@ hibernate {
 environments {
     development {
         dataSource {
+            println "***\n\n\n Using Dev datasource \n\n\n***"
             dbCreate = "create-drop" // one of 'create', 'create-drop', 'update', 'validate', ''
             url = "jdbc:mysql://localhost/register?useUnicode=yes&characterEncoding=UTF-8"
             username = "root"
@@ -30,10 +31,27 @@ environments {
         dataSource {
             //dbCreate = "update"
             //url = "jdbc:h2:mem:testDb;MVCC=TRUE;LOCK_TIMEOUT=10000;DB_CLOSE_ON_EXIT=FALSE"
+            println "***\n\n\n Using Test datasource \n\n\n***"
+            dbCreate = "create-drop" // one of 'create', 'create-drop', 'update', 'validate', ''
+            url = "jdbc:mysql://localhost/register?useUnicode=yes&characterEncoding=UTF-8"
+            username = "root"
+            password = "fountain"
+        }
+        hibernate {
+            show_sql = true
         }
     }
     production {
         dataSource {
+            println "***\n\n\n Using Dev datasource \n\n\n***"
+            dbCreate = "update" // one of 'create', 'create-drop', 'update', 'validate', ''
+            url = "jdbc:mysql://db/register?useUnicode=yes&characterEncoding=UTF-8"
+            username = "root"
+            password = "fountain"
+        }
+        hibernate {
+            show_sql = true
+        }
             /*
             dbCreate = "update"
             url = "jdbc:h2:prodDb;MVCC=TRUE;LOCK_TIMEOUT=10000;DB_CLOSE_ON_EXIT=FALSE"
@@ -57,7 +75,6 @@ environments {
                jdbcInterceptors = "ConnectionState"
                defaultTransactionIsolation = java.sql.Connection.TRANSACTION_READ_COMMITTED
             }
-        */
-        }
+        }*/
     }
 }

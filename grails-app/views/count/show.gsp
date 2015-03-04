@@ -1,4 +1,4 @@
-<%@ page import="com.pod.registerviewer.com.pod.registerviewer.Count" %>
+<%@ page import="com.pod.registerviewer.Count" %>
 <!DOCTYPE html>
 <html>
 <head>

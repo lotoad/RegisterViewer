@@ -1,13 +1,31 @@
 package com.pod.registerviewer
 
+import org.bson.types.ObjectId
+
 class Category {
+
+    static mapWith = "mongo"
+
+    //static mapping = {}
 
     static constraints = {
         parent nullable: true
+        children nullable: true
+        documents nullable: true
+        parent nullable: true
     }
 
+    ObjectId id
+    String name
+    User createdBy
+    Date createdAt
+    User modifiedBy
+    Date modifiedAt
     Category parent
-    List<Category> children = new ArrayList<Category>()
-    List<Document> documents = new ArrayList<Document>()
+    List children
+    List documents
+
+    static embedded = ['children', 'documents']
+
 
 }

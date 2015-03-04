@@ -76,6 +76,9 @@ grails.web.disable.multipart=false
 // request parameters to mask when logging exceptions
 grails.exceptionresolver.params.exclude = ['password']
 
+//Throw exceptions on all fail on error states.
+grails.gorm.failOnError=true
+
 // configure auto-caching of queries by default (if false you can cache individual queries with 'cache: true')
 grails.hibernate.cache.queries = false
 
@@ -85,6 +88,7 @@ grails.hibernate.pass.readonly = false
 // configure passing read-only to OSIV session by default, requires "singleSession = false" OSIV mode
 grails.hibernate.osiv.readonly = false
 
+//TODO This is the config used by the plugin - we need to refactor the plugin so that this is optional.
 grails {
     mongo {
         host = "localhost"
@@ -141,3 +145,21 @@ log4j.main = {
            'org.hibernate',
            'net.sf.ehcache.hibernate'
 }
+
+
+// Added by the Spring Security Core plugin:
+grails.plugin.springsecurity.userLookup.userDomainClassName = 'com.pod.registerviewer.User'
+grails.plugin.springsecurity.userLookup.authorityJoinClassName = 'com.pod.registerviewer.UserRole'
+grails.plugin.springsecurity.authority.className = 'com.pod.registerviewer.Role'
+grails.plugin.springsecurity.controllerAnnotations.staticRules = [
+	'/':                              ['permitAll'],
+	'/index':                         ['permitAll'],
+	'/index.gsp':                     ['permitAll'],
+	'/assets/**':                     ['permitAll'],
+	'/**/js/**':                      ['permitAll'],
+	'/**/css/**':                     ['permitAll'],
+	'/**/images/**':                  ['permitAll'],
+	'/**/favicon.ico':                ['permitAll'],
+    '/console/**':                    ['permitAll']
+]
+
