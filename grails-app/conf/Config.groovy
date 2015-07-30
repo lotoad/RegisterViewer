@@ -90,12 +90,12 @@ grails.hibernate.osiv.readonly = false
 
 //TODO This is the config used by the plugin - we need to refactor the plugin so that this is optional.
 grails {
-    mongo {
+    mongodb {
         host = "localhost"
         port = 27017
         //username = "blah"
         //password = "blah"
-        databaseName = "foo"
+        dbName = "MongoFilePlugin_RegisterViewer_Plugin_All"
     }
 }
 
@@ -109,7 +109,7 @@ environments {
         mongodb {
             host="localhost"
             port=27017
-            dbName = "whatever"
+            dbName = "App_RegisterViewer_Dev"
         }
 
         //Path to document file queue.
@@ -118,6 +118,12 @@ environments {
     }
     test {
         registerviewer.queue.path = "test/resources/pending"
+        //Mongo config
+        mongodb {
+            host="localhost"
+            port=27017
+            dbName = "App_RegisterViewer_Test"
+        }
     }
     production {
         grails.logging.jul.usebridge = false
@@ -152,7 +158,7 @@ grails.plugin.springsecurity.userLookup.userDomainClassName = 'com.pod.registerv
 grails.plugin.springsecurity.userLookup.authorityJoinClassName = 'com.pod.registerviewer.UserRole'
 grails.plugin.springsecurity.authority.className = 'com.pod.registerviewer.Role'
 grails.plugin.springsecurity.controllerAnnotations.staticRules = [
-	'/':                              ['permitAll'],
+	'/**':                              ['permitAll'],
 	'/index':                         ['permitAll'],
 	'/index.gsp':                     ['permitAll'],
 	'/assets/**':                     ['permitAll'],

@@ -6,11 +6,14 @@ class Document {
 
     static mapWith = "mongo"
 
+    static hasMany = [documentVersions:DocumentVersion]
+
     static constraints = {
         expiry nullable: true
+        currentPublishedVersion nullable: true
     }
 
-    static embedded = ['documentVersions']
+    //static embedded = ['documentVersions']
 
     ObjectId id
     DocumentVersion currentPublishedVersion
@@ -23,11 +26,19 @@ class Document {
     Classification classification = Classification.NONE
     /**
      * This is a file name we will generate for this document and the name
-     * we will pass to the gridFSservice - the actual name of the file we are
+     * we will consistently pass to the gridFSservice - the actual name of the file we are
      * storing in reality against this document may change
      */
     String generatedFilename
-    List documentVersions
+
+    /**
+     *
+     */
+    //List documentVersions
+
+    /**
+     * What about meta-data should it be associated with the document or the documentVersion?
+     */
 
     /*
     public Document(){
@@ -39,6 +50,7 @@ class Document {
     /**
      * Create a unique reference for this file (Probably a combination of the ObJId String and
      * something else...).
+     * We can just use a uniqueId like we are doing in the project bootstrap?!
      */
     def generateUniqueFileId(){
         if(id != null){

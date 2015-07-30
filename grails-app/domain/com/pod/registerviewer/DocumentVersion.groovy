@@ -14,6 +14,7 @@ class DocumentVersion {
     Document parentDocument
     ObjectId gridFsFileId
     String fileName
+    HashMap<String, String> metaData = [:]
     //String generatedFileName
 
 }

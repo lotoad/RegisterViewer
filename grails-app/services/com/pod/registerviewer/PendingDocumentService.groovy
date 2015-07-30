@@ -20,6 +20,17 @@ class PendingDocumentService implements InitializingBean{
     }
 
     /**
+     * Get the next pending document.
+     */
+    File getNextPendingDocument(){
+        def dir = new File(pendingDirectoryPath)
+        def files = dir.listFiles([accept:{file-> file ==~ /.*?\.pdf/ }] as FileFilter)
+        List<File> sortedFiles = files.sort {it.lastModified()}
+        return sortedFiles.first()
+    }
+
+
+    /**
      * List all files in the pending directory
      * @return
      */
@@ -34,7 +45,7 @@ class PendingDocumentService implements InitializingBean{
      * @return
      */
     Integer getPendingDocumentCount(){
-        def dir = new File('pendingDirectoryPath')
+        def dir = new File(pendingDirectoryPath)
         return dir.listFiles([accept:{file-> file ==~ /.*?\.pdf/ }] as FileFilter).size()
     }
 

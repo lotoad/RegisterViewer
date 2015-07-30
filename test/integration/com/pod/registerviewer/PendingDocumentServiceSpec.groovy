@@ -9,8 +9,8 @@ import spock.lang.*
 class PendingDocumentServiceSpec extends Specification {
 
     def pendingDocumentService
-    def PENDING_SETUP_BASE_PATH = "test/resources/pending_test_setup_files"
-    def PENDING_QUEUE_BASE_PATH = "test/resources/pending/"
+    static def PENDING_SETUP_BASE_PATH = "test/resources/pending_test_setup_files"
+    static def PENDING_QUEUE_BASE_PATH = "test/resources/pending/"
 
 
     def setup() {

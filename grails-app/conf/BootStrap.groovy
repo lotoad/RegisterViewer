@@ -1,11 +1,12 @@
 import com.pod.mongofile.GridFsService
 import com.pod.registerviewer.Category
+import com.pod.registerviewer.DefaultRoles
 import com.pod.registerviewer.Document
 import com.pod.registerviewer.DocumentVersion
 import com.pod.registerviewer.Role
 import com.pod.registerviewer.User
 import com.pod.registerviewer.UserRole
-import static java.util.UUID.randomUUID
+import java.util.UUID;
 
 class BootStrap {
 
@@ -16,10 +17,10 @@ class BootStrap {
          * We'll create some sample instances of the classes and relationships so that we can play around.
          **/
         Role userRole = new Role()
-        userRole.authority = "USER_ROLE"
+        userRole.authority = DefaultRoles.USER_ROLE
         userRole.save(flush:true)
         Role adminRole = new Role()
-        adminRole.authority = "ADMIN_ROLE"
+        adminRole.authority = DefaultRoles.ADMIN_ROLE
         adminRole.save(flush:true)
 
         /**
@@ -72,6 +73,7 @@ class BootStrap {
         category6.save(flush:true)
 
         category3.addToChildren(category5)
+        //category3.children.add(category5)
         category5.addToChildren(category6)
         category2.addToChildren(category3)
         category3.addToChildren(category1)
@@ -92,12 +94,24 @@ class BootStrap {
         def files = new File(PENDING_SETUP_BASE_PATH).listFiles()
         def d
         files.eachWithIndex {  file, i ->
-            d = new Document(owner: user1, custodian: user2, title: "Document ${i+1}", generatedFilename: randomUUID().toString().toUpperCase())
-            d.save(flush:true)
+
             def fis = new FileInputStream(file.getAbsolutePath())
-            def objId = gridFsService.saveFile(fis, "application/pdf", d.generatedFilename)
+            def randomFileName = 'TEST_' + UUID.randomUUID().toString().toUpperCase()
+
+            def objId = gridFsService.saveFile(fis, "application/pdf", randomFileName)
+
+            d = new Document(owner: user1, custodian: user2, title: "Document ${i+1}", generatedFilename: randomFileName)
+            d.save(flush:true)
+
             DocumentVersion dv = new DocumentVersion(parentDocument: d, fileName: file.getName(), gridFsFileId: objId)
             dv.save(flush:true)
+
+            d.currentPublishedVersion = dv
+            d.addToDocumentVersions(dv)
+
+            d.save(flush:true)
+
+
         }
 
 

@@ -2,11 +2,12 @@ package com.pod.registerviewer
 
 import org.bson.types.ObjectId
 
-class Category {
+class Category implements Serializable{
 
     static mapWith = "mongo"
 
     //static mapping = {}
+    static hasMany = [children:Category, documents:Document]
 
     static constraints = {
         parent nullable: true
@@ -22,10 +23,11 @@ class Category {
     User modifiedBy
     Date modifiedAt
     Category parent
-    List children
-    List documents
 
-    static embedded = ['children', 'documents']
+    //Embedding docs doesn't appear to work.
+    //List children
+    //List documents
+    //static embedded = ['children', 'documents']
 
 
 }
