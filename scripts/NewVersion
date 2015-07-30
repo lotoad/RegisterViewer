@@ -1,0 +1,23 @@
+import com.pod.registerviewer.*
+  
+//def v = new Version()//Version.findById(30)
+//v.testVar = 'gfghfghfghfhfdhgfhgfhgfkkkghfgfghf'
+//v.save(flush:true)
+  
+def c = new Category()
+c.name = "Test Category new 1";
+def id1 = c.save(flush:true)
+
+c = new Category()
+c.name = "Test Category new 2";
+def id2 = c.save(flush:true)
+
+c = new Category()
+c.name = "Test Category new 3";
+def id3 = c.save(flush:true)
+
+c = new Category()
+c.name = "Test Category new 4";
+def id4 = c.save(flush:true)
+
+

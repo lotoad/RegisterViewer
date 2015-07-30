@@ -1,0 +1,34 @@
+import com.pod.mongofile.GridFsService
+import groovy.json.*
+/*
+ctx.beanDefinitionNames.sort().each { name -> 
+	try{  
+		def b = ctx.getBean(name) 
+      	println name
+    }catch(e){
+    	//println e
+    }
+}
+*/
+
+
+def s = ctx.getBean("gridFsService")
+
+//def f = new File("/Users/jtoddington/IdeaProjects/MongoFile/test/resources/SampleScannedDoc.pdf")
+//def fis= new FileInputStream(f.getAbsolutePath())
+//s.saveFile(fis, 'pdf', 'SampleScannedDoc.pdf')
+
+def ret = s.retrieveVersion('SampleScannedDoc.pdf', 1)
+
+def jsonSlurper = new JsonSlurper()
+def object = jsonSlurper.parseText(ret.toString())
+
+def strId = object._id.$oid
+
+def gridFsDbFile = s.getFileContent(strId)
+
+gridFsDbFile.writeTo("/tmp/testFile1.pdf")
+
+                    
+//println s.sayHello()
+                    
