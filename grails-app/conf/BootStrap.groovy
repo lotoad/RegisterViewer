@@ -12,7 +12,6 @@ class BootStrap {
 
     def init = { servletContext ->
 
-
         /**
          * We'll create some sample instances of the classes and relationships so that we can play around.
          **/
@@ -100,7 +99,7 @@ class BootStrap {
 
             def objId = gridFsService.saveFile(fis, "application/pdf", randomFileName)
 
-            d = new Document(owner: user1, custodian: user2, title: "Document ${i+1}", generatedFilename: randomFileName)
+            d = new Document([owner: user1, custodian: user2, title: "Document ${i+1}"])
             d.save(flush:true)
 
             DocumentVersion dv = new DocumentVersion(parentDocument: d, fileName: file.getName(), gridFsFileId: objId)
@@ -113,8 +112,6 @@ class BootStrap {
 
 
         }
-
-
 
         /*
         def c = Category.findByName('category3')

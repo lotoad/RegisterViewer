@@ -1,6 +1,8 @@
 package com.pod.registerviewer
 
 import grails.test.mixin.TestFor
+import grails.test.spock.IntegrationSpec
+import org.bson.types.ObjectId
 import spock.lang.Shared
 import spock.lang.Specification
 
@@ -11,11 +13,12 @@ import java.nio.file.StandardCopyOption
 /**
  * See the API for {@link grails.test.mixin.services.ServiceUnitTestMixin} for usage instructions
  */
-@TestFor(DocumentService)
-class DocumentServiceSpec extends Specification {
-
+//@TestFor(DocumentService)
+class DocumentServiceSpec extends IntegrationSpec {
+    @Shared
     def documentService
     def pendingDocumentService
+    def gridFsService
     @Shared
     def OWNER_NAME = "userOwner"
     @Shared
@@ -47,35 +50,86 @@ class DocumentServiceSpec extends Specification {
     }
 
     def cleanup() {
+        pendingDocumentService.emptyPending()
+    }
+
+    def cleanupSpec(){
+        def docs = Document.findAll()
+        docs.each{
+            documentService.deleteDocument(it.id)
+        }
     }
 
     void "test add a document"() {
         when:
-        def documentTitle = "SAMPLE_DOCUMENT_TITLE_ADD_TEST"
+        def documentTitle = "SAMPLE_DOCUMENT_TITLE_ADD_TEST_1"
         def metaData = [stringVal:"someValue", dateVal:new Date()]
-        def document = documentService.createDocument(owner: owner, custodian: custodian, title: documentTitle, file: pendingDocumentService.getNextPendingDocument(), metadata:metaData)
+        def d = documentService.createDocument(owner: owner, custodian: custodian, title: documentTitle, file: pendingDocumentService.getNextPendingDocument(), metadata:metaData)
         then:
-        Document.findByTitle(documentTitle) != null
+        def retrievedDoc = Document.findByTitle(documentTitle)
+        assert retrievedDoc != null
+        assert retrievedDoc.documentVersions.size() == 1
+    }
 
-        /*
-        d = new Document(owner: user1, custodian: user2, title: "Document ${i+1}", generatedFilename: randomFileName)
-        d.save(flush:true)
 
-        DocumentVersion dv = new DocumentVersion(parentDocument: d, fileName: file.getName(), gridFsFileId: objId)
-        dv.save(flush:true)
-
-        d.currentPublishedVersion = dv
-        d.addToDocumentVersions(dv)
-
-        d.save(flush:true)
-        */
+    void "test add a document with multiple versions"() {
+        when:
+        //Add first version.
+        def documentTitle = "SAMPLE_DOCUMENT_TITLE_ADD_MULTIPLE_VERSIONS_1"
+        def metaData = [stringVal:"someValue", dateVal:new Date()]
+        def d = documentService.createDocument(owner: owner, custodian: custodian, title: documentTitle, file: pendingDocumentService.getNextPendingDocument(), metadata:metaData)
+        then:
+        def retrievedDoc = Document.findByTitle(documentTitle)
+        assert retrievedDoc != null
+        assert retrievedDoc.documentVersions.size() == 1
+        //Add another version.
+        when:
+        documentService.addNewVersion(retrievedDoc, pendingDocumentService.getNextPendingDocument(), true)
+        documentService.addNewVersion(retrievedDoc, pendingDocumentService.getNextPendingDocument(), false)
+        then:
+        assert retrievedDoc.documentVersions.size() == 3
     }
 
     void "test get a document"(){
+        when:
+        def documentTitle = "SAMPLE_DOCUMENT_TITLE_FIND_TEST_2"
+        def metaData = [stringVal:"someValue", dateVal:new Date()]
+        def d = documentService.createDocument(owner: owner, custodian: custodian, title: documentTitle, file: pendingDocumentService.getNextPendingDocument(), metadata:metaData)
+        then:
+        def retrievedDoc = documentService.getDocumentById(d.id)
+        assert retrievedDoc != null
+        assert retrievedDoc.documentVersions.size() == 1
+        assert d.id == retrievedDoc.id
+    }
 
+    void "test get a document by String id"(){
+        when:
+        def documentTitle = "SAMPLE_DOCUMENT_TITLE_FIND_TEST_1"
+        def metaData = [stringVal:"someValue", dateVal:new Date()]
+        def d = documentService.createDocument(owner: owner, custodian: custodian, title: documentTitle, file: pendingDocumentService.getNextPendingDocument(), metadata:metaData)
+        then:
+        def retrievedDoc = documentService.getDocumentById(d.id)
+        assert retrievedDoc != null
+        assert retrievedDoc.documentVersions.size() == 1
+        assert d.id == retrievedDoc.id
     }
 
     void "test delete a document"(){
-
+        when:
+        def documentTitle = "SAMPLE_DOCUMENT_TITLE_FIND_TEST_3"
+        def metaData = [stringVal:"someValue", dateVal:new Date()]
+        def d = documentService.createDocument(owner: owner, custodian: custodian, title: documentTitle, file: pendingDocumentService.getNextPendingDocument(), metadata:metaData)
+        then:
+        d.id == documentService.getDocumentById(d.id).id
+        when:
+        def dv = d.documentVersions.getAt(0)
+        ObjectId objectId = dv.gridFsFileId
+        documentService.deleteDocument(d.id)
+        then:
+        def retrievedDoc = documentService.getDocumentById(d.id)
+        assert retrievedDoc == null
+        //Make sure the grid fs and version have done.
+        assert DocumentVersion.findById(dv.id) == null
+        assert gridFsService.retriveFile(objectId) == null
     }
 }

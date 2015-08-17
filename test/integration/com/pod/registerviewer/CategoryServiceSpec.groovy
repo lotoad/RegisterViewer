@@ -1,14 +1,15 @@
 package com.pod.registerviewer
 
 import grails.test.mixin.TestFor
+import grails.test.spock.IntegrationSpec
 import spock.lang.Shared
 import spock.lang.Specification
 
 /**
  * See the API for {@link grails.test.mixin.services.ServiceUnitTestMixin} for usage instructions
  */
-@TestFor(CategoryService)
-class CategoryServiceSpec extends Specification {
+//@TestFor(CategoryService)
+class CategoryServiceSpec extends IntegrationSpec {
 
     @Shared
     def categoryService

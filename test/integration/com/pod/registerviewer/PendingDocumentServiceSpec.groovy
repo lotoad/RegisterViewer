@@ -1,12 +1,14 @@
 package com.pod.registerviewer
 
+import grails.test.spock.IntegrationSpec
+
 import java.nio.file.*
 import spock.lang.*
 
 /**
  *
  */
-class PendingDocumentServiceSpec extends Specification {
+class PendingDocumentServiceSpec extends IntegrationSpec {
 
     def pendingDocumentService
     static def PENDING_SETUP_BASE_PATH = "test/resources/pending_test_setup_files"

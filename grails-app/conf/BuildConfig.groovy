@@ -28,6 +28,7 @@ grails.project.fork = [
 grails.project.dependency.resolver = "maven" // or ivy
 
 grails.plugin.location.'MongoFile' = "/Users/jtoddington/IdeaProjects/MongoFile"
+grails.plugin.location.'DocumentSearcher' = "/Users/jtoddington/IdeaProjects/DocumentSearcher"
 
 grails.project.dependency.resolution = {
     // inherit Grails' default dependencies
